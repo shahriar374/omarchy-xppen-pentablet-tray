@@ -1,0 +1,24 @@
+#!/bin/sh
+# Prints: "<driver-state> <window-state>"
+#   driver-state: running | stopped
+#   window-state: shown   | hidden
+# The window is matched by the driver's own PID (_NET_WM_PID), never by a
+# hardcoded X id (those change on every restart).
+if ! pgrep -x PenTablet >/dev/null 2>&1; then
+    printf 'stopped hidden\n'
+    exit 0
+fi
+
+pid=$(pgrep -x PenTablet | head -1)
+shown=hidden
+
+ids=$(DISPLAY=:0 xprop -root _NET_CLIENT_LIST 2>/dev/null | sed 's/.*#//' | tr ',' ' ')
+for id in $ids; do
+    wpid=$(DISPLAY=:0 xprop -id "$id" _NET_WM_PID 2>/dev/null | grep -oE '[0-9]+$')
+    if [ "$wpid" = "$pid" ]; then
+        shown=shown
+        break
+    fi
+done
+
+printf 'running %s\n' "$shown"

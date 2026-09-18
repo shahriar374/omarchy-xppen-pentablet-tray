@@ -1,0 +1,18 @@
+/*
+ * Version script for libnoquit.so.
+ *
+ * The version node names MUST match the tags the application links against.
+ * QCoreApplicationPrivate::maybeQuit is tagged Qt_5_PRIVATE_API (it is a
+ * private Qt symbol); the other two are public Qt_5 symbols. Interposing
+ * without the matching node does nothing.
+ */
+Qt_5_PRIVATE_API {
+    global:
+        _ZN23QCoreApplicationPrivate9maybeQuitEv;
+};
+
+Qt_5 {
+    global:
+        _ZN16QCoreApplication17isQuitLockEnabledEv;
+        _ZN15QGuiApplication25setQuitOnLastWindowClosedEb;
+};

@@ -1,0 +1,55 @@
+#!/bin/sh
+# PenTablet control helper for the Omarchy bar widget.
+#   status            -> prints "running" or "stopped"
+#   show              -> connect to QtSingleApplication, raise the settings window
+#   quit              -> stop the driver via systemd
+#   restart           -> restart the driver service
+SOCK=/tmp/qtsingleapp-XPPenT-6c81
+SERVICE=app-xppentablet@autostart.service
+
+send() {
+  python3 -c "
+import socket, struct, sys
+s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+s.settimeout(3)
+s.connect('$SOCK')
+m = sys.argv[1].encode()
+s.sendall(struct.pack('>I', len(m)) + m)
+try:
+    print('ack' if s.recv(4096) == b'ack' else 'reply')
+except OSError:
+    print('no-reply')
+s.close()
+" "$1" 2>/dev/null
+}
+
+case "${1:-status}" in
+  status)
+    if pgrep -x PenTablet >/dev/null 2>&1; then
+      echo "running"
+    else
+      echo "stopped"
+    fi
+    ;;
+  show)
+    if pgrep -x PenTablet >/dev/null 2>&1; then
+      send '?Tray.show'
+    else
+      systemctl --user start "$SERVICE" >/dev/null 2>&1
+      sleep 4
+      send '?Tray.show'
+    fi
+    ;;
+  quit)
+    systemctl --user stop "$SERVICE" >/dev/null 2>&1
+    ;;
+  restart)
+    systemctl --user stop "$SERVICE" >/dev/null 2>&1
+    sleep 1
+    systemctl --user start "$SERVICE" >/dev/null 2>&1
+    ;;
+  *)
+    echo "usage: $0 {status|show|quit|restart}" >&2
+    exit 2
+    ;;
+esac

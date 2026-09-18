@@ -1,0 +1,13 @@
+[Unit]
+Description=XPPen PenTablet tray item (StatusNotifierItem)
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/xppen-sni
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=graphical-session.target

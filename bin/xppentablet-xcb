@@ -1,0 +1,2 @@
+#!/bin/sh
+exec env LD_PRELOAD="$HOME/.local/share/pentablet/libnoquit.so" QT_QPA_PLATFORM=xcb /usr/lib/pentablet/PenTablet.sh "$@"

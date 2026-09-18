@@ -1,0 +1,5 @@
+# build artifacts
+shim/libnoquit.so
+*.so
+__pycache__/
+*.pyc

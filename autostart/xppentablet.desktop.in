@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=xppentablet
+Comment=XPPen driver (XWayland + close-to-tray shim)
+Exec=@HOME@/.local/bin/xppentablet-xcb
+Icon=/usr/share/icons/hicolor/256x256/apps/xppentablet.png
+Terminal=false
+Type=Application
+Categories=Application;Utility;
+StartupNotify=true
+Name[en_US]=xppentablet
