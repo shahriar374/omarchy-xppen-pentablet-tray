@@ -54,9 +54,11 @@ install -m 0644 "$REPO_DIR/systemd/xppen-tray.service" "$SYSTEMD_DIR/xppen-tray.
 
 # Autostart: run the driver through the shim wrapper. Back up any existing file.
 if [ -f "$AUTOSTART_DIR/xppentablet.desktop" ]; then
-    cp -f "$AUTOSTART_DIR/xppentablet.desktop" \
-          "$AUTOSTART_DIR/xppentablet.desktop.bak.$$"
-    say "    backed up existing autostart to xppentablet.desktop.bak.$$"
+    if [ ! -f "$AUTOSTART_DIR/xppentablet.desktop.bak" ]; then
+        cp -f "$AUTOSTART_DIR/xppentablet.desktop" \
+              "$AUTOSTART_DIR/xppentablet.desktop.bak"
+        say "    backed up existing autostart to xppentablet.desktop.bak"
+    fi
 fi
 sed "s|@HOME@|$HOME_DIR|g" "$REPO_DIR/autostart/xppentablet.desktop.in" \
     > "$AUTOSTART_DIR/xppentablet.desktop"

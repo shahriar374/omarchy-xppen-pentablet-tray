@@ -22,10 +22,10 @@ rm -f "$SYSTEMD_DIR/xppen-tray.service"
 
 # Restore the previous autostart entry if install.sh made a backup, otherwise
 # remove our override so the system entry takes over again.
-backup=$(ls -1t "$AUTOSTART_DIR"/xppentablet.desktop.bak.* 2>/dev/null | head -1 || true)
-if [ -n "$backup" ]; then
-    mv -f "$backup" "$AUTOSTART_DIR/xppentablet.desktop"
-    say "    restored previous autostart from $(basename "$backup")"
+if [ -f "$AUTOSTART_DIR/xppentablet.desktop.bak" ]; then
+    mv -f "$AUTOSTART_DIR/xppentablet.desktop.bak" \
+          "$AUTOSTART_DIR/xppentablet.desktop"
+    say "    restored previous autostart from xppentablet.desktop.bak"
 else
     rm -f "$AUTOSTART_DIR/xppentablet.desktop"
 fi
